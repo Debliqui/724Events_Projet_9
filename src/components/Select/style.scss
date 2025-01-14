@@ -1,3 +1,5 @@
+@import "src/colors.scss";
+
 .SelectContainer {
   width: 308px;
   min-height: 86px;
@@ -43,11 +45,21 @@
       text-transform: capitalize;
     }
   }
-  input {
+  .category_btn {
     width: 16px;
     height: 16px;
     min-width: 16px;
     margin-right: 16px;
+    margin-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border: 1.5px solid grey;
+    border-radius: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+  }
+  .active {
+    background-color: $primary;
+    // border: 2px solid grey;
   }
   button {
     border: none;
