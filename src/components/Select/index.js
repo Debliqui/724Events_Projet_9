@@ -8,7 +8,6 @@ import "./style.scss";
 const Select = ({
   selection,
   onChange,
-  name,
   titleEmpty,
   label,
   type = "normal",
@@ -16,40 +15,43 @@ const Select = ({
   const [value, setValue] = useState();
   const [collapsed, setCollapsed] = useState(true);
   const changeValue = (newValue) => {
-    onChange();
+    onChange(newValue);
     setValue(newValue);
-    setCollapsed(newValue);
+    setCollapsed(true);
   };
   return (
     <div className={`SelectContainer ${type}`} data-testid="select-testid">
       {label && <div className="label">{label}</div>}
       <div className="Select">
-        <ul>
+        <ul aria-label="Liste des catégories">
           <li className={collapsed ? "SelectTitle--show" : "SelectTitle--hide"}>
-            {value || (!titleEmpty && "Toutes")}
+            <p>{value || (!titleEmpty && "Toutes")}</p>
           </li>
           {!collapsed && (
             <>
               {!titleEmpty && (
                 <li onClick={() => changeValue(null)}>
-                  <input defaultChecked={!value} name="selected" type="radio" />{" "}
-                  Toutes
+                  <button
+                    className={`category_btn ${!value ? "active" : ""}`}
+                    aria-label="category-toutes"
+                    type="button"
+                  />
+                  <p>Toutes</p>
                 </li>
               )}
               {selection.map((s) => (
                 <li key={s} onClick={() => changeValue(s)}>
-                  <input
-                    defaultChecked={value === s}
-                    name="selected"
-                    type="radio"
-                  />{" "}
-                  {s}
+                  <button
+                    className={`category_btn ${value === s ? "active" : ""}`}
+                    aria-label={`category-${s}`}
+                    type="button"
+                  />
+                  <p>{s}</p>
                 </li>
               ))}
             </>
           )}
         </ul>
-        <input type="hidden" value={value || ""} name={name} />
         <button
           type="button"
           data-testid="collapse-button-testid"
@@ -84,18 +86,16 @@ const Arrow = () => (
 Select.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func,
-  name: PropTypes.string,
   titleEmpty: PropTypes.bool,
   label: PropTypes.string,
   type: PropTypes.string,
-}
+};
 
 Select.defaultProps = {
   onChange: () => null,
   titleEmpty: false,
   label: "",
   type: "normal",
-  name: "select",
-}
+};
 
 export default Select;
