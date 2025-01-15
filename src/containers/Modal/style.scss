@@ -8,6 +8,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(2px);
   .content {
     position: relative;
     overflow: hidden;
@@ -15,6 +16,7 @@
     min-width: 300px;
     min-height: 100px;
     border-radius: 7px;
+    border: 1px solid #e6e5e5;
     button {
       position: absolute;
       top: 4px;
