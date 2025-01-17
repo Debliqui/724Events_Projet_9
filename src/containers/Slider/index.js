@@ -21,48 +21,59 @@ const Slider = () => {
     );
   };
   useEffect(() => {
-    nextCard();
+    if (data) {
+      nextCard();
+    }
     return () => clearTimeout(timeout);
   });
   return (
     <div aria-label="Carrousel" className="SlideCardList">
-      {byDateDesc?.map((event, idx) => (
-        <div
-          aria-label={`slide${idx + 1}`}
-          aria-current={index === idx ? "true" : "false"}
-          key={`${event.title} + ${event.id}`}
-          className={`SlideCard SlideCard--${
-            index === idx ? "display" : "hide"
-          }`}
-        >
-          <img src={event.cover} alt="forum" />
-          <div className="SlideCard__descriptionContainer">
-            <div className="SlideCard__description">
-              <h3>{event.title}</h3>
-              <p>{event.description}</p>
-              <div>{getMonth(new Date(event.date))}</div>
-            </div>
-          </div>
-        </div>
-      ))}
-      <div className="SlideCard__paginationContainer">
-        <ol aria-label="Pagination carrousel" className="SlideCard__pagination">
-          {byDateDesc?.map((event, radioIdx) => (
-            <li
-              key={event.id}
-              aria-current={index === radioIdx ? "true" : "false"}
+      {data === null ? (
+        <div className="SlideCard-is-loading">... Loading</div>
+      ) : (
+        <>
+          {byDateDesc.map((event, idx) => (
+            <div
+              aria-label={`slide${idx + 1}`}
+              aria-current={index === idx ? "true" : "false"}
+              key={`${event.title} + ${event.id}`}
+              className={`SlideCard SlideCard--${
+                index === idx ? "display" : "hide"
+              }`}
             >
-              <button
-                type="button"
-                aria-label={`slide${radioIdx + 1}`}
-                aria-pressed={index === radioIdx}
-                className={index === radioIdx ? "selected" : "notSelected"}
-                onClick={() => setIndex(radioIdx)}
-              />
-            </li>
+              <img src={event.cover} alt="forum" />
+              <div className="SlideCard__descriptionContainer">
+                <div className="SlideCard__description">
+                  <h3>{event.title}</h3>
+                  <p>{event.description}</p>
+                  <div>{getMonth(new Date(event.date))}</div>
+                </div>
+              </div>
+            </div>
           ))}
-        </ol>
-      </div>
+          <div className="SlideCard__paginationContainer">
+            <ol
+              aria-label="Pagination carrousel"
+              className="SlideCard__pagination"
+            >
+              {byDateDesc?.map((event, radioIdx) => (
+                <li
+                  key={event.id}
+                  aria-current={index === radioIdx ? "true" : "false"}
+                >
+                  <button
+                    type="button"
+                    aria-label={`slide${radioIdx + 1}`}
+                    aria-pressed={index === radioIdx}
+                    className={index === radioIdx ? "selected" : "notSelected"}
+                    onClick={() => setIndex(radioIdx)}
+                  />
+                </li>
+              ))}
+            </ol>
+          </div>
+        </>
+      )}
     </div>
   );
 };
