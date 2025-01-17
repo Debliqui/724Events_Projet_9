@@ -5,6 +5,20 @@
   width: 100%;
   max-width: 1440px;
   height: 586px;
+  .SlideCard-is-loading {
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-size: 30px;
+    font-family: "Space Grotesk", sans-serif;
+    left: 0;
+    top: 0;
+    position: absolute;
+    background-color: rgb(240, 237, 237);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .SlideCard {
     width: 100%;
     left: 0;
