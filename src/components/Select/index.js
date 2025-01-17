@@ -8,6 +8,7 @@ import "./style.scss";
 const Select = ({
   selection,
   onChange,
+  name,
   titleEmpty,
   label,
   type = "normal",
@@ -23,35 +24,32 @@ const Select = ({
     <div className={`SelectContainer ${type}`} data-testid="select-testid">
       {label && <div className="label">{label}</div>}
       <div className="Select">
-        <ul aria-label="Liste des catégories">
+        <ul>
           <li className={collapsed ? "SelectTitle--show" : "SelectTitle--hide"}>
-            <p>{value || (!titleEmpty && "Toutes")}</p>
+            {value || (!titleEmpty && "Toutes")}
           </li>
           {!collapsed && (
             <>
               {!titleEmpty && (
                 <li onClick={() => changeValue(null)}>
-                  <button
-                    className={`category_btn ${!value ? "active" : ""}`}
-                    aria-label="category-toutes"
-                    type="button"
-                  />
-                  <p>Toutes</p>
+                  <input defaultChecked={!value} name="selected" type="radio" />{" "}
+                  Toutes
                 </li>
               )}
               {selection.map((s) => (
                 <li key={s} onClick={() => changeValue(s)}>
-                  <button
-                    className={`category_btn ${value === s ? "active" : ""}`}
-                    aria-label={`category-${s}`}
-                    type="button"
-                  />
-                  <p>{s}</p>
+                  <input
+                    defaultChecked={value === s}
+                    name="selected"
+                    type="radio"
+                  />{" "}
+                  {s}
                 </li>
               ))}
             </>
           )}
         </ul>
+        <input type="hidden" value={value || ""} name={name} />
         <button
           type="button"
           data-testid="collapse-button-testid"
@@ -86,6 +84,7 @@ const Arrow = () => (
 Select.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func,
+  name: PropTypes.string,
   titleEmpty: PropTypes.bool,
   label: PropTypes.string,
   type: PropTypes.string,
@@ -96,6 +95,7 @@ Select.defaultProps = {
   titleEmpty: false,
   label: "",
   type: "normal",
+  name: "select",
 };
 
 export default Select;

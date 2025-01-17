@@ -11,6 +11,12 @@ const mockContactApi = () =>
 const clearValue = () => {
   const formData = document.getElementById("form");
   formData.reset();
+  const selectData = document.querySelector(
+    "#form .SelectTitle--show, #form .SelectTitle--hide"
+  );
+  if (selectData) {
+    selectData.textContent = "";
+  }
 };
 
 const Form = ({ onSuccess, onError }) => {
