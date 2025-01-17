@@ -13,7 +13,19 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { last } = useData();
+  const { data } = useData();
+  const today = new Date();
+  let last = null;
+  if (data) {
+    last = data?.events.reduce((eventPrev, eventCurr) => {
+      const prevDate = new Date(eventPrev.date);
+      const currDate = new Date(eventCurr.date);
+      return Math.abs(currDate - today) < Math.abs(prevDate - today)
+        ? eventCurr
+        : eventPrev;
+    });
+  }
+
   return (
     <>
       <header>
@@ -120,13 +132,15 @@ const Page = () => {
       <footer className="row">
         <div className="col presta">
           <h3>Notre derniére prestation</h3>
-          <EventCard
-            imageSrc={last?.cover}
-            title={last?.title}
-            date={new Date(last?.date)}
-            small
-            label="boom"
-          />
+          {last && (
+            <EventCard
+              imageSrc={last.cover}
+              title={last.title}
+              date={new Date(last.date)}
+              small
+              label="boom"
+            />
+          )}
         </div>
         <div className="col contact">
           <h3>Contactez-nous</h3>
