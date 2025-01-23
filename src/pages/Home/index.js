@@ -10,6 +10,7 @@ import Logo from "../../components/Logo";
 import Icon from "../../components/Icon";
 import Form from "../../containers/Form";
 import Modal from "../../containers/Modal";
+import LastEvent from "../../components/LastEvent";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
@@ -17,13 +18,7 @@ const Page = () => {
   const today = new Date();
   let last = null;
   if (data) {
-    last = data?.events.reduce((eventPrev, eventCurr) => {
-      const prevDate = new Date(eventPrev.date);
-      const currDate = new Date(eventCurr.date);
-      return Math.abs(currDate - today) < Math.abs(prevDate - today)
-        ? eventCurr
-        : eventPrev;
-    });
+    last = LastEvent(data.events, today);
   }
 
   return (
@@ -129,7 +124,7 @@ const Page = () => {
           </Modal>
         </div>
       </main>
-      <footer className="row">
+      <footer className="row" data-testid="footer-testid">
         <div className="col presta">
           <h3>Notre derniére prestation</h3>
           {last && (
