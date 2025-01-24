@@ -1,10 +1,10 @@
-import { render, screen } from "@testing-library/react";
-import Home from "./index";
-import { api, DataProvider } from "../../contexts/DataContext";
-import EventList from "../../containers/Events";
-import PeopleCard from "../../components/PeopleCard";
-import EventCard from "../../components/EventCard";
-import LastEvent from "../../components/LastEvent";
+import { fireEvent, render, screen } from "@testing-library/react"
+import Home from "./index"
+import { api, DataProvider } from "../../contexts/DataContext"
+import EventList from "../../containers/Events"
+import PeopleCard from "../../components/PeopleCard"
+import EventCard from "../../components/EventCard"
+import LastEvent from "../../components/LastEvent"
 
 const data = {
   events: [
@@ -73,26 +73,62 @@ const data = {
       cover: "/images/teemu-paananen-bzdhc5b3Bxs-unsplash1.png",
     },
   ],
-};
+}
+
+describe("When Form is created", () => {
+  it("a list of fields card is displayed", async () => {
+    api.loadData = jest.fn().mockReturnValue(data)
+    render(
+      <DataProvider>
+        <Home />
+      </DataProvider>
+    )
+    await screen.findByText("Email")
+    await screen.findByText("Nom")
+    await screen.findByText("Prénom")
+    await screen.findByText("Personel / Entreprise")
+    await screen.findByText("Message")
+  })
+
+  describe("and a click is triggered on the submit button", () => {
+    it("the success message is displayed", async () => {
+      api.loadData = jest.fn().mockReturnValue(data)
+      render(
+        <DataProvider>
+          <Home />
+        </DataProvider>
+      )
+      fireEvent(
+        await screen.findByText("Envoyer"),
+        new MouseEvent("click", {
+          cancelable: true,
+          bubbles: true,
+        })
+      )
+      await screen.findByText("En cours")
+      await screen.findByText("Message envoyé !")
+    })
+  })
+})
 
 describe("When a page is created", () => {
   it("a list of events is displayed", async () => {
-    api.loadData = jest.fn().mockReturnValue(data);
+    api.loadData = jest.fn().mockReturnValue(data)
     render(
       <DataProvider>
         <Home>
           <EventList />
         </Home>
       </DataProvider>
-    );
-    const eventListElement = await screen.findAllByTestId("card-testid");
-    expect(eventListElement.length).toBeGreaterThan(0);
+    )
+    const eventListElement = await screen.findAllByTestId("card-testid")
+    expect(eventListElement.length).toBeGreaterThan(0)
     eventListElement.forEach((element) => {
-      expect(element).toBeInTheDocument();
-    });
-  });
+      expect(element).toBeInTheDocument()
+    })
+  })
   it("a list of people is displayed", async () => {
-    api.loadData = jest.fn().mockReturnValue(data);
+    api.loadData = jest.fn().mockReturnValue(data)
     render(
       <DataProvider>
         <Home>
@@ -108,29 +144,27 @@ describe("When a page is created", () => {
           />
         </Home>
       </DataProvider>
-    );
-    const peopleListElement = await screen.findAllByTestId(
-      "people-card-testid"
-    );
-    expect(peopleListElement.length).toBeGreaterThan(0);
+    )
+    const peopleListElement = await screen.findAllByTestId("people-card-testid")
+    expect(peopleListElement.length).toBeGreaterThan(0)
     peopleListElement.forEach((element) => {
-      expect(element).toBeInTheDocument();
-    });
-  });
+      expect(element).toBeInTheDocument()
+    })
+  })
   it("a footer is displayed", async () => {
-    api.loadData = jest.fn().mockReturnValue(data);
+    api.loadData = jest.fn().mockReturnValue(data)
     render(
       <DataProvider>
         <Home />
       </DataProvider>
-    );
-    const footerElement = await screen.findByTestId("footer-testid");
-    expect(footerElement).toBeInTheDocument();
-  });
+    )
+    const footerElement = await screen.findByTestId("footer-testid")
+    expect(footerElement).toBeInTheDocument()
+  })
   it("an event card, with the last event, is displayed", async () => {
-    const today = new Date();
-    let last = null;
-    last = LastEvent(data.events, today);
+    const today = new Date()
+    let last = null
+    last = LastEvent(data.events, today)
     render(
       <EventCard
         imageSrc={last.cover}
@@ -139,13 +173,13 @@ describe("When a page is created", () => {
         small
         label="boom"
       />
-    );
-    const eventCardImage = screen.getByTestId("card-image-testid");
+    )
+    const eventCardImage = screen.getByTestId("card-image-testid")
     expect(eventCardImage).toHaveAttribute(
       "src",
       "/images/alexandre-pellaes-6vAjp0pscX0-unsplash.png"
-    );
-    await screen.findByText("User&product MixUsers");
-    await screen.findByText("avril");
-  });
-});
+    )
+    await screen.findByText("User&product MixUsers")
+    await screen.findByText("avril")
+  })
+})
