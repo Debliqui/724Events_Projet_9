@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react"
+import "@testing-library/jest-dom"
 import Home from "./index"
 import { api, DataProvider } from "../../contexts/DataContext"
 import EventList from "../../containers/Events"
@@ -124,7 +125,11 @@ describe("When a page is created", () => {
     const eventListElement = await screen.findAllByTestId("card-testid")
     expect(eventListElement.length).toBeGreaterThan(0)
     eventListElement.forEach((element) => {
-      expect(element).toBeInTheDocument()
+      const title = element.querySelector(".EventCard__title")
+      const date = element.querySelector(".EventCard__month")
+      expect(title).toBeInTheDocument()
+      expect(title).toHaveRole("heading")
+      expect(date).toBeInTheDocument()
     })
   })
   it("a list of people is displayed", async () => {
@@ -147,9 +152,11 @@ describe("When a page is created", () => {
     )
     const peopleListElement = await screen.findAllByTestId("people-card-testid")
     expect(peopleListElement.length).toBeGreaterThan(0)
-    peopleListElement.forEach((element) => {
-      expect(element).toBeInTheDocument()
-    })
+    const nameElem = await screen.findByText("Samira")
+    expect(nameElem).toBeVisible()
+    expect(nameElem).toHaveRole("heading")
+    const positionElem = await screen.findByText("Directeur marketing")
+    expect(positionElem).toBeVisible()
   })
   it("a footer is displayed", async () => {
     api.loadData = jest.fn().mockReturnValue(data)
@@ -158,8 +165,7 @@ describe("When a page is created", () => {
         <Home />
       </DataProvider>
     )
-    const footerElement = await screen.findByTestId("footer-testid")
-    expect(footerElement).toBeInTheDocument()
+    expect(await screen.findByTestId("footer-testid")).toBeInTheDocument()
   })
   it("an event card, with the last event, is displayed", async () => {
     const today = new Date()
@@ -179,7 +185,7 @@ describe("When a page is created", () => {
       "src",
       "/images/alexandre-pellaes-6vAjp0pscX0-unsplash.png"
     )
-    await screen.findByText("User&product MixUsers")
-    await screen.findByText("avril")
+    expect(await screen.findByText("User&product MixUsers")).toBeVisible()
+    expect(await screen.findByText("avril")).toBeVisible()
   })
 })
